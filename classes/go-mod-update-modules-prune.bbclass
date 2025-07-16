@@ -186,6 +186,11 @@ do_update_modules_prune[dirs] = "${GOTMPDIR} ${B}/src/${GO_WORKDIR}"
 do_update_modules_prune[cleandirs] = "${GOMODCACHE}"
 
 python do_update_modules_prune() {
+    keys = sorted(d.getVarFlags('PACKAGECONFIG').keys())
+    allconfigs = ' '.join(keys)
+    d.setVar('PACKAGECONFIG', allconfigs)
+    bb.warn(f"setting PACKAGECONFIG to {allconfigs}")
+
     bb.build.exec_func("repopulate_cache", d)
     modules = update_modules_src_uris(d)
     update_license_files(d, modules)
